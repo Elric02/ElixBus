@@ -1,0 +1,93 @@
+{
+	"FribourgLoop": {
+		"stops": [
+			{
+				"name": "Charmettes", "trip": 10, "tripVar": 3, "stop": 4, "stopVar": 2
+			},
+			{
+				"name": "Industrie", "trip": 3, "tripVar": 1, "stop": 3, "stopVar": 1
+			},
+			{
+				"name": "J. Vogt", "trip": 5, "tripVar": 2, "stop": 3, "stopVar": 1
+			},
+			{
+				"name": "Fries", "trip": 5, "tripVar": 1, "stop": 3, "stopVar": 1
+			},
+			{
+				"name": "Neuveville / Motta", "trip": 18, "tripVar": 2, "stop": 3, "stopVar": 2
+			},
+			{
+				"name": "Neuveville / Court-Chemin", "trip": 5, "tripVar": 1, "stop": 2, "stopVar": 1
+			},
+			{
+				"name": "Eglise St-Jean", "trip": 5, "tripVar": 1, "stop": 1, "stopVar": 0
+			},
+			{
+				"name": "Karrweg", "trip": 5, "tripVar": 0, "stop": 1, "stopVar": 1
+			},
+			{
+				"name": "Petit-St-Jean", "trip": 3, "tripVar": 0, "stop": 2, "stopVar": 1
+			},
+			{
+				"name": "Palme", "trip": 5, "tripVar": 5, "stop": 1, "stopVar": 1
+			},
+			{
+				"name": "Porte-de-Berne", "trip": 10, "tripVar": 1, "stop": 1, "stopVar": 0
+			},
+			{
+				"name": "Auge Sous-Pont", "trip": 10, "tripVar": 0, "stop": 2, "stopVar": 1
+			},
+			{
+				"name": "Pont Zaehringen", "trip": 12, "tripVar": 3, "stop": 1, "stopVar": 0
+			},
+			{
+				"name": "Bourg / Chancellerie", "trip": 5, "tripVar": 0, "stop": 2, "stopVar": 1
+			},
+			{
+				"name": "Tilleul / Cathédrale", "trip": 10, "tripVar": 1, "stop": 3, "stopVar": 2
+			},
+			{
+				"name": "Place Georges Python", "trip": 8, "tripVar": 2, "stop": 4, "stopVar": 2
+			},
+			{
+				"name": "Université", "trip": 5, "tripVar": 1, "stop": 3, "stopVar": 2
+			},
+			{
+				"name": "Miséricorde", "trip": 5, "tripVar": 1, "stop": 3, "stopVar": 1
+			},
+			{
+				"name": "Ste-Thérèse", "trip": 10, "tripVar": 2, "stop": 3, "stopVar": 2
+			},
+			{
+				"name": "Vuille", "trip": 3, "tripVar": 2, "stop": 2, "stopVar": 2
+			},
+			{
+				"name": "Mont-Carmel", "trip": 10, "tripVar": 5, "stop": 4, "stopVar": 1
+			},
+			{
+				"name": "Nuithonie", "trip": 24, "tripVar": 8, "stop": 2, "stopVar": 1
+			},
+			{
+				"name": "Cormanon", "trip": 10, "tripVar": 2, "stop": 2, "stopVar": 1
+			},
+			{
+				"name": "Chênes", "trip": 5, "tripVar": 0, "stop": 1, "stopVar": 1
+			},
+			{
+				"name": "Derrey", "trip": 5, "tripVar": 0, "stop": 2, "stopVar": 1
+			},
+			{
+				"name": "Champriond", "trip": 10, "tripVar": 1, "stop": 2, "stopVar": 1
+			},
+			{
+				"name": "Beaumont", "trip": 3, "tripVar": 1, "stop": 3, "stopVar": 2
+			},
+			{
+				"name": "Fonderie", "trip": 10, "tripVar": 3, "stop": 2, "stopVar": 1
+			},
+			{
+				"name": "Jardin botanique", "trip": 5, "tripVar": 4, "stop": 1, "stopVar": 0
+			},
+		]
+	}
+}
