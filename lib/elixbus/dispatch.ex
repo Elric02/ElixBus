@@ -1,4 +1,4 @@
-defmodule dispatch do
+defmodule Dispatch do
 
   # To call for first execution
   def deploy(nb, route) do
