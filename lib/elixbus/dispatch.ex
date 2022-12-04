@@ -42,6 +42,7 @@ defmodule Dispatch do
     else
       if newNb > nb do
         createBus(nb, newNb, route)
+		manageBus(newNb, route)
       else
         removeBus(nb)
         changeNumber(nb-1, newNb, route)
