@@ -11,7 +11,7 @@ defmodule Dispatch do
     if currentId < nbMax do
       # (fonction bus à importer de bus.ex)
       IO.puts("Creating new bus (id #{currentId}) on route #{route}")
-      Process.register(spawn(__MODULE__, :bus, [id, route]), String.to_atom("#{currentId}"))¨
+      Process.register(spawn(__MODULE__, :bus, [id, route]), String.to_atom("#{currentId}"))
       createBus(currentId + 1, nbMax, route)
     end
   end
@@ -42,10 +42,12 @@ defmodule Dispatch do
     else
       if newNb > nb do
         createBus(nb, newNb, route)
-		manageBus(newNb, route)
+		    manageBus(newNb, route)
       else
         removeBus(nb)
         changeNumber(nb-1, newNb, route)
+      end
+    end
   end
 
 end

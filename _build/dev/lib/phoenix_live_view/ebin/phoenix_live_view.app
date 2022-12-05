@@ -1,7 +1,7 @@
 {application,phoenix_live_view,
              [{applications,[kernel,stdlib,elixir,logger,phoenix,phoenix_html,
                              telemetry]},
-              {description,"Rich, real-time user experiences with server-rendered HTML\n"},
+              {description,"Rich, real-time user experiences with server-rendered HTML\r\n"},
               {modules,['Elixir.Inspect.Phoenix.LiveView.Socket',
                         'Elixir.Inspect.Phoenix.LiveView.Socket.AssignsNotInSocket',
                         'Elixir.Inspect.Phoenix.LiveView.UploadConfig',

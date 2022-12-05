@@ -1,30 +1,32 @@
 defmodule ElixbusWeb.ElixbusLive do
   use Phoenix.LiveView
 
-  def mount(_session, socket) do
-    socket = assign(socket, :count, 0)
+  def mount(_params, _session, socket) do
+    socket = assign(socket, :light_bulb_status, "off")
     {:ok, socket}
   end
 
   def render(assigns) do
-
-    ~H"""
-    <h1>Qui est le plus beau ? </h1>
-    <button phx-click="increment">Elric</button>
-    <button phx-click="decrement">Loris</button>
+    ~L"""
+    <h1>The light is <%= @light_bulb_status %>.</h1>
+    <button phx-click="on">On</button>
+    <button phx-click="off">Off</button>
     """
-
   end
 
-  def handle_event("increment", _, socket) do
-    count = socket.assigns.count +1
-    socket = assign(socket, :count, count)
+  def handle_event("on", _value, socket) do
+    socket =
+      socket
+      |> assign(:light_bulb_status, "on")
+
     {:noreply, socket}
   end
 
-  def handle_event("decrement", _, socket) do
-    count = socket.assigns.count -1
-    socket = assign(socket, :count, count)
+  def handle_event("off", _value, socket) do
+    socket =
+      socket
+      |> assign(:light_bulb_status, "off")
+
     {:noreply, socket}
   end
 

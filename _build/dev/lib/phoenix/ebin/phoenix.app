@@ -2,7 +2,7 @@
              [{applications,[kernel,stdlib,elixir,logger,eex,crypto,
                              public_key,plug,plug_crypto,telemetry,
                              phoenix_pubsub,phoenix_view,castore]},
-              {description,"Productive. Reliable. Fast. A productive web framework that\ndoes not compromise speed or maintainability.\n"},
+              {description,"Productive. Reliable. Fast. A productive web framework that\r\ndoes not compromise speed or maintainability.\r\n"},
               {modules,['Elixir.Mix.Phoenix','Elixir.Mix.Phoenix.Context',
                         'Elixir.Mix.Phoenix.Schema',
                         'Elixir.Mix.Tasks.Compile.Phoenix',
