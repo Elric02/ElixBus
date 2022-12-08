@@ -9,7 +9,7 @@ defmodule Elixbus.Application do
   def start(_type, _args) do
     children = [
       # Start the Ecto repository
-      Elixbus.Repo,
+      # Elixbus.Repo,
       # Start the Telemetry supervisor
       ElixbusWeb.Telemetry,
       # Start the PubSub system
@@ -19,6 +19,8 @@ defmodule Elixbus.Application do
       # Start a worker by calling: Elixbus.Worker.start_link(arg)
       # {Elixbus.Worker, arg}
     ]
+
+    Elixbus.Testjson.inputJson()
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
