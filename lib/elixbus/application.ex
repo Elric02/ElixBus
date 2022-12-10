@@ -20,7 +20,8 @@ defmodule Elixbus.Application do
       # {Elixbus.Worker, arg}
     ]
 
-    Elixbus.Testjson.inputJson()
+    #Elixbus.Testjson.inputJson()
+    Bus.bus(0,"FribourgLoop")
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
