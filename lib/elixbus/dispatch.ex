@@ -11,7 +11,7 @@ defmodule Dispatch do
     if currentId < nbMax do
       # (fonction bus à importer de bus.ex)
       IO.puts("Creating new bus (id #{currentId}) on route #{route}")
-      Process.register(spawn(__MODULE__, :bus, [currentId, route]), String.to_atom("#{currentId}"))
+      Process.register(spawn(Bus, :bus, [currentId, route]), String.to_atom("#{currentId}"))
       createBus(currentId + 1, nbMax, route)
     end
   end

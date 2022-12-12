@@ -25,7 +25,7 @@ defmodule Bus do
     receive do
       {Order} -> IO.puts("Placeholder to react to #{Order}")
     after
-      time_period -> IO.puts("at state #{state} at position #{posToString(route,pos)} moving on")
+      time_period -> IO.puts("Bus no #{id} at state #{state} at position #{pos} : #{posToString(route,pos)} moving on")
     end
 
     bus_deployed(id, route, next_pos, next_state)
