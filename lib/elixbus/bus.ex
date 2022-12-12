@@ -23,7 +23,10 @@ defmodule Bus do
 
     # waits for orders from the dispatch, else waits time_period ms until next state
     receive do
-      {Order} -> IO.puts("Placeholder to react to #{Order}")
+      :remove ->
+        IO.puts("Removed bus #{id}")
+        Process.unregister(String.to_atom("#{id}"))
+        Process.exit(self(), "ended bus")
     after
       time_period -> IO.puts("Bus no #{id} at state #{state} at position #{pos} : #{posToString(route,pos)} moving on")
     end

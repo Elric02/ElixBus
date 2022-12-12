@@ -19,7 +19,6 @@ defmodule Dispatch do
   # Removes specified bus
   def removeBus(id) do
     send(String.to_atom("#{id}"), :remove)
-    Process.unregister(String.to_atom("#{id}"))
   end
 
   # Receives all messages here
@@ -44,7 +43,7 @@ defmodule Dispatch do
         createBus(nb, newNb, route)
 		    manageBus(newNb, route)
       else
-        removeBus(nb)
+        removeBus(nb-1)
         changeNumber(nb-1, newNb, route)
       end
     end
