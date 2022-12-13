@@ -44,19 +44,19 @@
 				"name": "Bourg / Chancellerie", "trip": 5, "tripVar": 0, "stop": 2, "stopVar": 1
 			},
 			{
-				"name": "Tilleul / Cathédrale", "trip": 10, "tripVar": 1, "stop": 3, "stopVar": 2
+				"name": "Tilleul / Cathedrale", "trip": 10, "tripVar": 1, "stop": 3, "stopVar": 2
 			},
 			{
 				"name": "Place Georges Python", "trip": 8, "tripVar": 2, "stop": 4, "stopVar": 2
 			},
 			{
-				"name": "Université", "trip": 5, "tripVar": 1, "stop": 3, "stopVar": 2
+				"name": "Universite", "trip": 5, "tripVar": 1, "stop": 3, "stopVar": 2
 			},
 			{
-				"name": "Miséricorde", "trip": 5, "tripVar": 1, "stop": 3, "stopVar": 1
+				"name": "Misericorde", "trip": 5, "tripVar": 1, "stop": 3, "stopVar": 1
 			},
 			{
-				"name": "Ste-Thérèse", "trip": 10, "tripVar": 2, "stop": 3, "stopVar": 2
+				"name": "Ste-Therese", "trip": 10, "tripVar": 2, "stop": 3, "stopVar": 2
 			},
 			{
 				"name": "Vuille", "trip": 3, "tripVar": 2, "stop": 2, "stopVar": 2
@@ -71,7 +71,7 @@
 				"name": "Cormanon", "trip": 10, "tripVar": 2, "stop": 2, "stopVar": 1
 			},
 			{
-				"name": "Chênes", "trip": 5, "tripVar": 0, "stop": 1, "stopVar": 1
+				"name": "Chenes", "trip": 5, "tripVar": 0, "stop": 1, "stopVar": 1
 			},
 			{
 				"name": "Derrey", "trip": 5, "tripVar": 0, "stop": 2, "stopVar": 1
