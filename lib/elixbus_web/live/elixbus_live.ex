@@ -27,6 +27,9 @@ defmodule ElixbusWeb.ElixbusLive do
     </style>
     </head>
     <body>
+
+    <!-- DARK MODE FEATURE -->
+
     <p></p>
     <button onclick="toggleDark()">Toggle dark mode</button>
 
@@ -37,8 +40,8 @@ defmodule ElixbusWeb.ElixbusLive do
     }
     </script>
 
-    </body>
-    </html>
+    <!-- CHANGE BUS COUNT FEATURE -->
+
     <h1>There are currently <%= @bus_count_status %> busses on the route.</h1>
     <button phx-click="1bus">1 bus on the road</button>
     <button phx-click="2bus">2 bus on the road</button>
@@ -46,6 +49,17 @@ defmodule ElixbusWeb.ElixbusLive do
     <button phx-click="4bus">4 bus on the road</button>
     <button phx-click="5bus">5 bus on the road</button>
 
+    </body>
+    </html>
+
+    <!-- SHOW BUS ROUTE FEATURE -->
+    <script>
+      window.onload = function() {
+        fetch('assets/routes.json')
+          .then((response) => response.json())
+          .then((json) => console.log(json));
+      }
+    </script>
 
     """
   end

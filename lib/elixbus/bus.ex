@@ -9,7 +9,7 @@ defmodule Bus do
 
   # takes a string, returns a list of maps of the stops
   def get_route(route) do
-    routes_Str = File.read!("priv/routes.json")
+    routes_Str = File.read!("priv/static/assets/routes.json")
     routes_JS = Jason.decode!(routes_Str)
     routes_JS[route]["stops"]
   end
