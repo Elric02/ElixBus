@@ -3,7 +3,7 @@ defmodule ElixbusWeb.ElixbusLive do
 
   def mount(_params, _session, socket) do
     socket = assign(socket, :light_bulb_status, "off")
-    socket = assign(socket, :bus_count_status, 3)
+    socket = assign(socket, :bus_count_status, 0)
     {:ok, socket}
   end
 
@@ -24,9 +24,17 @@ defmodule ElixbusWeb.ElixbusLive do
       background-color: black;
       color: white;
     }
+
+    th {
+      writing-mode: vertical-lr;
+      text-align: right;
+      padding: 2px;
+    }
+
     </style>
     </head>
     <body>
+
 
     <!-- DARK MODE FEATURE -->
 
@@ -34,32 +42,56 @@ defmodule ElixbusWeb.ElixbusLive do
     <button onclick="toggleDark()">Toggle dark mode</button>
 
     <script>
-    function toggleDark() {
-      var element = document.body;
-      element.classList.toggle("dark-mode");
-    }
+      function toggleDark() {
+        var element = document.body;
+        element.classList.toggle("dark-mode");
+      }
     </script>
 
     <!-- CHANGE BUS COUNT FEATURE -->
 
     <h1>There are currently <%= @bus_count_status %> busses on the route.</h1>
-    <button phx-click="1bus">1 bus on the road</button>
-    <button phx-click="2bus">2 bus on the road</button>
-    <button phx-click="3bus">3 bus on the road</button>
-    <button phx-click="4bus">4 bus on the road</button>
-    <button phx-click="5bus">5 bus on the road</button>
+    <button phx-click="1bus" onclick="loadData()">1 bus on the road</button>
+    <button phx-click="2bus" onclick="loadData()">2 bus on the road</button>
+    <button phx-click="3bus" onclick="loadData()">3 bus on the road</button>
+    <button phx-click="4bus" onclick="loadData()">4 bus on the road</button>
+    <button phx-click="5bus" onclick="loadData()">5 bus on the road</button>
+
+    <!-- SHOW BUS ROUTE FEATURE -->
+
+    <div id="showbus"></div>
+    <script>
+      loadData = function() {
+        fetch('assets/routes.json')
+          .then((response) => response.json())
+          .then((json) => initTable(json));
+      }
+      initTable = function(json) {
+        const data = Object.entries(json);
+        for (var i = 0; i < data.length; i++) {
+          contentToAdd = "<div class='route'><h3>" + data[i][0] + "</h3><table><tr>";
+          const stops = Object.entries(data[i][1])[0][1];
+          for (var j = 0; j < stops.length; j++) {
+            contentToAdd += "<th>" + stops[j]["name"] + "</th>";
+          }
+          contentToAdd += "</tr><tr>";
+          for (var j = 0; j < stops.length; j++) {
+            contentToAdd += "<td></td>";
+          }
+          contentToAdd += "</tr></table></div>";
+          setTimeout(function() { appendToHtml(contentToAdd); }, "1000");
+        }
+      }
+      appendToHtml = function(contentToAdd) {
+        document.getElementById("showbus").innerHTML += contentToAdd;
+      }
+      loadData()
+
+    </script>
+
 
     </body>
     </html>
-
-    <!-- SHOW BUS ROUTE FEATURE -->
-    <script>
-      window.onload = function() {
-        fetch('assets/routes.json')
-          .then((response) => response.json())
-          .then((json) => console.log(json));
-      }
-    </script>
 
     """
   end

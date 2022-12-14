@@ -21,7 +21,7 @@ defmodule Elixbus.Application do
     ]
 
     #Elixbus.Testjson.inputJson()
-    Process.register(spawn(Dispatch, :deploy, [3, "FribourgLoop"]), :dispatch)
+    Process.register(spawn(Dispatch, :deploy, [0, "FribourgLoop"]), :dispatch)
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
