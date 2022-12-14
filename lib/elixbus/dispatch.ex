@@ -25,7 +25,8 @@ defmodule Dispatch do
   def manageBus(nb, route) do
     receive do
       {:position, id, pos} ->
-        IO.puts("Position received from #{id} : #{pos}")
+        #IO.puts("Position received from #{id} : #{pos}")
+        ElixbusWeb.ElixbusLive.update_table(id, pos)
         # TODO : store positions somewhere ? and compute if a bus is late and early
         manageBus(nb, route)
       {:change, newNb} ->

@@ -96,6 +96,14 @@ defmodule ElixbusWeb.ElixbusLive do
     """
   end
 
+  def update_table(id, pos) do
+    # TODO : Actually update the table (comment obtenir socket ???)
+    #socket =
+    #  socket
+    #  |> assign(String.to_atom("bus_pos#{id}"), pos)
+    IO.puts("This is supposed to update the table; bus no #{id} is at pos #{pos}")
+  end
+
   def handle_event("1bus", _value, socket) do
     socket =
       socket

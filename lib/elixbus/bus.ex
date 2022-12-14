@@ -28,7 +28,9 @@ defmodule Bus do
         Process.unregister(String.to_atom("#{id}"))
         Process.exit(self(), "ended bus")
     after
-      time_period -> IO.puts("Bus no #{id} at state #{state} at position #{pos} : #{posToString(route,pos)} moving on")
+      time_period ->
+        IO.puts("Bus no #{id} at state #{state} at position #{pos} : #{posToString(route,pos)} moving on")
+        send(:dispatch, {:position, id, pos})
     end
 
     bus_deployed(id, route, next_pos, next_state)
