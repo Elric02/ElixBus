@@ -4,6 +4,7 @@ defmodule ElixbusWeb.ElixbusLive do
   def mount(_params, _session, socket) do
     socket = assign(socket, :light_bulb_status, "off")
     socket = assign(socket, :bus_count_status, 0)
+    Process.register(spawn(LiveReceiver, :init, [socket]), :livereceiver)
     {:ok, socket}
   end
 
@@ -60,6 +61,7 @@ defmodule ElixbusWeb.ElixbusLive do
     <!-- SHOW BUS ROUTE FEATURE -->
 
     <div id="showbus"></div>
+    <h1>TEST : <%= @bus_pos0 %> <%= @bus_pos1 %> <%= @bus_pos2 %> <%= @bus_pos3 %> <%= @bus_pos4 %></h1>
     <script>
       loadData = function() {
         fetch('assets/routes.json')
@@ -80,12 +82,18 @@ defmodule ElixbusWeb.ElixbusLive do
           }
           contentToAdd += "</tr></table></div>";
           setTimeout(function() { appendToHtml(contentToAdd); }, "1000");
+          //setTimeout(function() { testShow(); }, "1000");
         }
       }
       appendToHtml = function(contentToAdd) {
         document.getElementById("showbus").innerHTML += contentToAdd;
       }
       loadData()
+
+      /*testShow = function() {
+        console.log(<%= @bus_pos0 %>)
+        setTimeout(function() { testShow(); }, "1000");
+      }*/
 
     </script>
 
@@ -98,9 +106,7 @@ defmodule ElixbusWeb.ElixbusLive do
 
   def update_table(id, pos) do
     # TODO : Actually update the table (comment obtenir socket ???)
-    #socket =
-    #  socket
-    #  |> assign(String.to_atom("bus_pos#{id}"), pos)
+    send(:livereceiver, {id, pos})
     IO.puts("This is supposed to update the table; bus no #{id} is at pos #{pos}")
   end
 
