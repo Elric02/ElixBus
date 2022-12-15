@@ -4,7 +4,14 @@ defmodule ElixbusWeb.ElixbusLive do
   def mount(_params, _session, socket) do
     socket = assign(socket, :light_bulb_status, "off")
     socket = assign(socket, :bus_count_status, 0)
-    Process.register(spawn(LiveReceiver, :init, [socket]), :livereceiver)
+    socket = assign(socket, :bus_pos0, 0)
+    socket = assign(socket, :bus_pos1, 0)
+    socket = assign(socket, :bus_pos2, 0)
+    socket = assign(socket, :bus_pos3, 0)
+    socket = assign(socket, :bus_pos4, 0)
+    if Process.whereis(:livereceiver) == nil do
+      Process.register(spawn(__MODULE__, :init_receive, [socket]), :livereceiver)
+    end
     {:ok, socket}
   end
 
@@ -105,8 +112,8 @@ defmodule ElixbusWeb.ElixbusLive do
   end
 
   def update_table(id, pos) do
-    # TODO : Actually update the table (comment obtenir socket ???)
-    send(:livereceiver, {id, pos})
+    # TODO : Actually update the table (:livereceiver n'existe pas ?)
+    #send(:livereceiver, {id, pos})
     IO.puts("This is supposed to update the table; bus no #{id} is at pos #{pos}")
   end
 
@@ -158,6 +165,20 @@ defmodule ElixbusWeb.ElixbusLive do
     send(:dispatch, {:change, 5})
 
     {:noreply, socket}
+  end
+
+
+  def init_receive(socket) do
+    receive_live(socket)
+  end
+
+  def receive_live(socket) do
+    receive do
+      {id, pos} ->
+        socket =
+          socket
+          |> assign(String.to_atom("bus_pos#{id}"), pos)
+    end
   end
 
 end
