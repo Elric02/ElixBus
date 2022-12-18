@@ -17,7 +17,6 @@ defmodule Bus do
   # should be functionnal except reaction to messages
   # main function needs id (integer), route (list of maps), actual pos (index of the list of maps), and state (atom either :enroute or :stop)
   def bus_deployed(id, route, pos, state, wait) do
-    send(:dispatch, {:position, id, posToString(route,pos)})
     #record time
     time_start = Time.utc_now()
 

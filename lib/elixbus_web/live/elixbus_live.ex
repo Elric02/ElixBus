@@ -10,7 +10,7 @@ defmodule ElixbusWeb.ElixbusLive do
     socket = assign(socket, :bus_pos3, 0)
     socket = assign(socket, :bus_pos4, 0)
     if Process.whereis(:livereceiver) == nil do
-      Process.register(spawn(__MODULE__, :init_receive, [socket]), :livereceiver)
+      Process.register(spawn(__MODULE__, :init_receive, [socket, 5]), :livereceiver)
     end
     {:ok, socket}
   end
@@ -64,6 +64,7 @@ defmodule ElixbusWeb.ElixbusLive do
     <button phx-click="3bus" onclick="loadData()">3 bus on the road</button>
     <button phx-click="4bus" onclick="loadData()">4 bus on the road</button>
     <button phx-click="5bus" onclick="loadData()">5 bus on the road</button>
+    <button phx-click="testfunction" onclick="loadData()">Test reload</button>
 
     <!-- SHOW BUS ROUTE FEATURE -->
 
@@ -89,7 +90,7 @@ defmodule ElixbusWeb.ElixbusLive do
           }
           contentToAdd += "</tr></table></div>";
           setTimeout(function() { appendToHtml(contentToAdd); }, "1000");
-          //setTimeout(function() { testShow(); }, "1000");
+          setTimeout(function() { testShow(); }, "1000");
         }
       }
       appendToHtml = function(contentToAdd) {
@@ -97,10 +98,9 @@ defmodule ElixbusWeb.ElixbusLive do
       }
       loadData()
 
-      /*testShow = function() {
-        console.log(<%= @bus_pos0 %>)
-        setTimeout(function() { testShow(); }, "1000");
-      }*/
+      testShow = function() {
+        // idée : prendre directement dans le HTML les valeurs (actuellement elles sont affichées après "TEST")
+      }
 
     </script>
 
@@ -112,8 +112,7 @@ defmodule ElixbusWeb.ElixbusLive do
   end
 
   def update_table(id, pos) do
-    # TODO : Actually update the table (:livereceiver n'existe pas ?)
-    #send(:livereceiver, {id, pos})
+    send(:livereceiver, {:update, id, pos})
     IO.puts("This is supposed to update the table; bus no #{id} is at pos #{pos}")
   end
 
@@ -168,16 +167,42 @@ defmodule ElixbusWeb.ElixbusLive do
   end
 
 
-  def init_receive(socket) do
-    receive_live(socket)
-  end
-
-  def receive_live(socket) do
+  def handle_event("testfunction", _value, socket) do
+    send(:livereceiver, {:refresh, self()})
     receive do
-      {id, pos} ->
+      currentValues ->
         socket =
           socket
-          |> assign(String.to_atom("bus_pos#{id}"), pos)
+          |> assign(:bus_pos0, Enum.at(currentValues, 0))
+        socket =
+          socket
+          |> assign(:bus_pos1, Enum.at(currentValues, 1))
+        socket =
+          socket
+          |> assign(:bus_pos2, Enum.at(currentValues, 2))
+        socket =
+          socket
+          |> assign(:bus_pos3, Enum.at(currentValues, 3))
+        socket =
+          socket
+          |> assign(:bus_pos4, Enum.at(currentValues, 4))
+        {:noreply, socket}
+    end
+  end
+
+
+  def init_receive(socket, n) do
+    receive_live(socket, (for n <- 0..(n-1), do: 0))
+  end
+
+  def receive_live(socket, currentValues) do
+    IO.inspect(currentValues)
+    receive do
+      {:update, id, pos} ->
+        receive_live(socket, List.replace_at(currentValues, id, pos))
+      {:refresh, returnProcess} ->
+        send(returnProcess, currentValues)
+        receive_live(socket, currentValues)
     end
   end
 
