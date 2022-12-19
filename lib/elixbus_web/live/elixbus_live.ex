@@ -58,7 +58,7 @@ defmodule ElixbusWeb.ElixbusLive do
 
     <!-- CHANGE BUS COUNT FEATURE -->
 
-    <h1>There are currently <%= @bus_count_status %> busses on the route.</h1>
+    <h1>Number of busses currently on the route : <%= @bus_count_status %> </h1>
     <button phx-click="1bus" onclick="loadData()">1 bus on the road</button>
     <button phx-click="2bus" onclick="loadData()">2 bus on the road</button>
     <button phx-click="3bus" onclick="loadData()">3 bus on the road</button>
