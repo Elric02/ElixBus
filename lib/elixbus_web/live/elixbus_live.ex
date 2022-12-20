@@ -37,6 +37,7 @@ defmodule ElixbusWeb.ElixbusLive do
       writing-mode: vertical-lr;
       text-align: right;
       padding: 2px;
+      font-size: 22px;
     }
 
     </style>
@@ -64,12 +65,12 @@ defmodule ElixbusWeb.ElixbusLive do
     <button phx-click="3bus" onclick="loadData()">3 bus on the road</button>
     <button phx-click="4bus" onclick="loadData()">4 bus on the road</button>
     <button phx-click="5bus" onclick="loadData()">5 bus on the road</button>
-    <button phx-click="testfunction" onclick="loadData()">Test reload</button>
+    <button phx-click="reloaddata" id="reloadbutton" onclick="loadData()">Reload manually</button>
 
     <!-- SHOW BUS ROUTE FEATURE -->
 
     <div id="showbus"></div>
-    <h1>TEST : <%= @bus_pos0 %> <%= @bus_pos1 %> <%= @bus_pos2 %> <%= @bus_pos3 %> <%= @bus_pos4 %></h1>
+    <h1 id ="currentpos" hidden>Current positions : <%= @bus_pos0 %> <%= @bus_pos1 %> <%= @bus_pos2 %> <%= @bus_pos3 %> <%= @bus_pos4 %></h1>
     <script>
       loadData = function() {
         fetch('assets/routes.json')
@@ -89,17 +90,25 @@ defmodule ElixbusWeb.ElixbusLive do
             contentToAdd += "<td></td>";
           }
           contentToAdd += "</tr></table></div>";
-          setTimeout(function() { appendToHtml(contentToAdd); }, "1000");
-          setTimeout(function() { testShow(); }, "1000");
+          setTimeout(function() { appendToHtml(contentToAdd); }, "100");
         }
       }
+      currentpos_buffer = 0;
       appendToHtml = function(contentToAdd) {
-        document.getElementById("showbus").innerHTML += contentToAdd;
+        currentpos = document.getElementById("currentpos").innerHTML;
+        console.log(document.getElementById("currentpos").innerHTML);
+        if (currentpos != currentpos_buffer) {
+          console.log("AAAAAAAAAAAAA");
+          document.getElementById("showbus").innerHTML += contentToAdd;
+          currentpos_buffer = currentpos;
+        }
       }
       loadData()
+      setTimeout(function() { automaticReload(); }, "1000");
 
-      testShow = function() {
-        // idée : prendre directement dans le HTML les valeurs (actuellement elles sont affichées après "TEST")
+      automaticReload = function() {
+        document.getElementById("reloadbutton").click()
+        setTimeout(function() { automaticReload(); }, "1000");
       }
 
     </script>
@@ -167,7 +176,7 @@ defmodule ElixbusWeb.ElixbusLive do
   end
 
 
-  def handle_event("testfunction", _value, socket) do
+  def handle_event("reloaddata", _value, socket) do
     send(:livereceiver, {:refresh, self()})
     receive do
       currentValues ->
