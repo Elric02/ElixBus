@@ -85,9 +85,17 @@ defmodule ElixbusWeb.ElixbusLive do
           for (var j = 0; j < stops.length; j++) {
             contentToAdd += "<th>" + stops[j]["name"] + "</th>";
           }
-          contentToAdd += "</tr><tr>";
-          for (var j = 0; j < stops.length; j++) {
-            contentToAdd += "<td></td>";
+          for (var j = 0; j < 5; j++) {
+            contentToAdd += "</tr><tr>";
+            currentPosition = document.getElementById("currentpos").innerHTML.split(' ')[j+3];
+            console.log(currentPosition);
+            for (var k = 0; k < stops.length; k++) {
+              if (currentPosition == k) {
+                contentToAdd += "<td>" + j + "</td>";
+              } else {
+                contentToAdd += "<td></td>";
+              }
+            }
           }
           contentToAdd += "</tr></table></div>";
           setTimeout(function() { appendToHtml(contentToAdd); }, "100");
@@ -98,7 +106,6 @@ defmodule ElixbusWeb.ElixbusLive do
         currentpos = document.getElementById("currentpos").innerHTML;
         console.log(document.getElementById("currentpos").innerHTML);
         if (currentpos != currentpos_buffer) {
-          console.log("AAAAAAAAAAAAA");
           document.getElementById("showbus").innerHTML += contentToAdd;
           currentpos_buffer = currentpos;
         }
