@@ -37,7 +37,13 @@ defmodule ElixbusWeb.ElixbusLive do
       writing-mode: vertical-lr;
       text-align: right;
       padding: 2px;
-      font-size: 22px;
+      font-size: 20px;
+    }
+
+    td {
+      text-align: center;
+      padding: 2px;
+      font-size: 16px;
     }
 
     </style>
