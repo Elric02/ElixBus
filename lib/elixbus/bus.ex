@@ -14,15 +14,18 @@ defmodule Bus do
     routes_JS[route]["stops"]
   end
 
-  # should be functionnal except reaction to messages
-  # main function needs id (integer), route (list of maps), actual pos (index of the list of maps), and state (atom either :enroute or :stop)
+  # main function, it needs id (integer), route (list of maps), actual pos (index of the list of maps), and state (atom either :enroute or :stop)
+  # to simulates the bus moving and waiting the process waits some time for a message and moves on
+  # two messages can be received, either to end the process, or to wait a set time, if the bus is at a stop it will wait that time, else it will wait the remaining time
+  # and set wait to the time to wait at the stop
   def bus_deployed(id, route, pos, state, wait) do
-    #record time
+    # record time
     time_start = Time.utc_now()
-
+    # send position to dispatch
+    send(:dispatch, {:position, id, pos})
+    # calculate next position and state
     {next_pos, next_state} = next(route, pos, state)
-
-    # calculate the time to wait right now if we're stopped and the next time to wait
+    # calculate the time to wait right now and the next wait time
     {time_period,wait} = if state == :stop && wait != 0 do
       {wait,0}
     else
@@ -31,10 +34,12 @@ defmodule Bus do
 
     # waits for orders from the dispatch, else waits time_period ms until next state
     receive do
+      # receive remove and exit the process
       :remove ->
         IO.puts("Removed bus #{id}")
         Process.unregister(String.to_atom("#{id}"))
         Process.exit(self(), "ended bus")
+      # receive wait a time, if stopped wait the time, else finish "moving" and set wait to the time received
       {:wait, t} ->
         IO.puts("Dispatch asked to wait for #{t} seconds when it is stopped")
         {wait_next, wait_now} = if state == :stop do
@@ -49,12 +54,11 @@ defmodule Bus do
         t = Time.diff(time_start, Time.utc_now())
         IO.puts("Bus no #{id} was at state #{state} at position #{pos} for #{t} seconds : #{posToString(route,pos)} moving on")
         bus_deployed(id, route, next_pos, next_state, wait_next)
+    # waits for the time needed to "move" or to be stopped for orders
     after
       time_period ->
         IO.puts("Bus no #{id} was at state #{state} at position #{pos} for #{time_period/1000} seconds : #{posToString(route,pos)} moving on")
-        send(:dispatch, {:position, id, pos})
     end
-
     bus_deployed(id, route, next_pos, next_state, wait)
   end
 
