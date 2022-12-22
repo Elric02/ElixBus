@@ -29,24 +29,27 @@ defmodule Dispatch do
     receive do
       {:position, id, pos} ->
         ElixbusWeb.ElixbusLive.update_table(id, pos)
-        # Which one is the following bus in the order of the list
-        if id == nb - 1 do
-          nextbus = 0
-          # Check if the bus is early compared to the next one on the list
-          timeDiff = computeTime(routelistmap, pos, Enum.at(currentPos, nextbus))
-          if timeDiff < (totallength / nb)-40 do
-            timeToWait = round(((totallength / nb)-40) - timeDiff)
+        # Which one is the previous bus in the order of the list
+        if id == 0 do
+          previousbus = nb - 1
+          # Check if the bus is early compared to the previous one in the list
+          timeDiff = computeTime(routelistmap, pos, Enum.at(currentPos, previousbus))
+          # Special condition : don't wait if it is bus 0 and previous one is at the same stop
+          IO.puts("#{timeDiff} #{(totallength / nb)-50}")
+          if timeDiff < (totallength / nb)-50 and timeDiff != 0 do
+            timeToWait = ceil(((totallength / nb)-30) - timeDiff)
             IO.puts("Bus no #{id} is too early. Sending command to wait #{timeToWait} seconds")
-            # send(String.to_atom("#{id}"), {:wait, timeToWait})
+            send(String.to_atom("#{id}"), {:wait, timeToWait})
           end
         else
-          nextbus = id + 1
-          # Check if the bus is early compared to the next one on the list
-          timeDiff = computeTime(routelistmap, pos, Enum.at(currentPos, nextbus))
-          if timeDiff < (totallength / nb)-40 do
-            timeToWait = round(((totallength / nb)-40) - timeDiff)
+          previousbus = id - 1
+          # Check if the bus is early compared to the previous one in the list
+          timeDiff = computeTime(routelistmap, pos, Enum.at(currentPos, previousbus))
+          IO.puts("#{timeDiff} #{(totallength / nb)-50}")
+          if timeDiff < (totallength / nb)-50 do
+            timeToWait = ceil(((totallength / nb)-30) - timeDiff)
             IO.puts("Bus no #{id} is too early. Sending command to wait #{timeToWait} seconds")
-            # send(String.to_atom("#{id}"), {:wait, timeToWait})
+            send(String.to_atom("#{id}"), {:wait, timeToWait})
           end
         end
         manageBus(nb, route, routelistmap, totallength, List.replace_at(currentPos, id, pos))
