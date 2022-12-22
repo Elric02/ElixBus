@@ -38,12 +38,12 @@ defmodule Bus do
           {0,t}
         else
           # calculate time left to travel to the next stop
-          to_travel = time_period - Time.diff(time_start,Time.utc_now())
+          to_travel = time_period - Time.diff(Time.utc_now(), time_start)
           {t,to_travel}
         end
         Process.sleep(wait_now*1000)
         # calculate the time it took to change state
-        t = Time.diff(time_start, Time.utc_now())
+        t = Time.diff(Time.utc_now(), time_start)
         IO.puts("Bus no #{id} was at state #{state} at position #{pos} for #{t} seconds : #{posToString(route,pos)} moving on")
         bus_deployed(id, route, next_pos, next_state, wait_next)
     # waits for the time needed to "move" or to be stopped for orders
