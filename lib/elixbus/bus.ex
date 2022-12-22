@@ -48,8 +48,8 @@ defmodule Bus do
         bus_deployed(id, route, next_pos, next_state, wait_next)
     # waits for the time needed to "move" or to be stopped for orders
     after
-      time_period ->
-        IO.puts("Bus no #{id} was at state #{state} at position #{pos} for #{time_period/1000} seconds : #{posToString(route,pos)} moving on")
+      time_period*1000 ->
+        IO.puts("Bus no #{id} was at state #{state} at position #{pos} for #{time_period} seconds : #{posToString(route,pos)} moving on")
     end
     bus_deployed(id, route, next_pos, next_state, wait)
   end
@@ -69,7 +69,7 @@ defmodule Bus do
     {new_pos, new_state}
   end
 
-  # given a route, a position and a state, it returns how long (ms) till next state
+  # given a route, a position and a state, it returns how long (s) till next state
   def goal_time(route, pos, state) do
     stopmap = Enum.at(route,pos)
     {json_time, json_var_time} = if state == :stop do
@@ -77,7 +77,7 @@ defmodule Bus do
     else
       {stopmap["trip"],stopmap["tripVar"]}
     end
-    1000*(json_time + Enum.random(0..json_var_time))
+    json_time + Enum.random(0..json_var_time)
   end
 
   # returns the name of the stop it is at
