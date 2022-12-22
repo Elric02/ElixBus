@@ -2,6 +2,7 @@ defmodule ElixbusWeb.ElixbusLive do
   use Phoenix.LiveView
 
   def mount(_params, _session, socket) do
+    # Initial variables assignment of the socket
     socket = assign(socket, :light_bulb_status, "off")
     socket = assign(socket, :bus_count_status, 0)
     socket = assign(socket, :bus_pos0, 0)
@@ -75,26 +76,30 @@ defmodule ElixbusWeb.ElixbusLive do
 
     <!-- SHOW BUS ROUTE FEATURE -->
 
-    <div id="showbus"></div>
+    <div id="showbus">Loading...</div>
     <h1 id ="currentpos" hidden>Current positions : <%= @bus_pos0 %> <%= @bus_pos1 %> <%= @bus_pos2 %> <%= @bus_pos3 %> <%= @bus_pos4 %></h1>
     <script>
+      // Load data from the JSON
       loadData = function() {
         fetch('assets/routes.json')
           .then((response) => response.json())
           .then((json) => initTable(json));
       }
+      // Create the displayed table using previously loaded data and current bus positions
       initTable = function(json) {
         const data = Object.entries(json);
         for (var i = 0; i < data.length; i++) {
+          // Route name
           contentToAdd = "<div class='route'><h3>" + data[i][0] + "</h3><table><tr>";
+          // Header row : stop names
           const stops = Object.entries(data[i][1])[0][1];
           for (var j = 0; j < stops.length; j++) {
             contentToAdd += "<th>" + stops[j]["name"] + "</th>";
           }
+          // Next rows : bus positions
           for (var j = 0; j < 5; j++) {
             contentToAdd += "</tr><tr>";
             currentPosition = document.getElementById("currentpos").innerHTML.split(' ')[j+3];
-            console.log(currentPosition);
             for (var k = 0; k < stops.length; k++) {
               if (currentPosition == k) {
                 contentToAdd += "<td>" + j + "</td>";
@@ -104,21 +109,25 @@ defmodule ElixbusWeb.ElixbusLive do
             }
           }
           contentToAdd += "</tr></table></div>";
+          // Display table only after the page initialization
           setTimeout(function() { appendToHtml(contentToAdd); }, "100");
         }
       }
+      // Display table by adding code to the current html
       currentpos_buffer = 0;
       appendToHtml = function(contentToAdd) {
         currentpos = document.getElementById("currentpos").innerHTML;
-        console.log(document.getElementById("currentpos").innerHTML);
         if (currentpos != currentpos_buffer) {
-          document.getElementById("showbus").innerHTML += contentToAdd;
+          document.getElementById("showbus").innerHTML = contentToAdd;
           currentpos_buffer = currentpos;
         }
       }
+
       loadData()
+
       setTimeout(function() { automaticReload(); }, "1000");
 
+      // Reload the table periodically so that users don't have to click the reload button continuously
       automaticReload = function() {
         document.getElementById("reloadbutton").click()
         setTimeout(function() { automaticReload(); }, "1000");
@@ -133,11 +142,12 @@ defmodule ElixbusWeb.ElixbusLive do
     """
   end
 
+  # sends an update message with the new position value of one of the busses
   def update_table(id, pos) do
     send(:livereceiver, {:update, id, pos})
-    IO.puts("This is supposed to update the table; bus no #{id} is at pos #{pos}")
   end
 
+  # sets the bus counts to 1, handles socket value and sends message to the dispatch for it to change the bus count
   def handle_event("1bus", _value, socket) do
     socket =
       socket
@@ -148,6 +158,7 @@ defmodule ElixbusWeb.ElixbusLive do
     {:noreply, socket}
   end
 
+  # sets the bus counts to 2, handles socket value and sends message to the dispatch for it to change the bus count
   def handle_event("2bus", _value, socket) do
     socket =
       socket
@@ -158,6 +169,7 @@ defmodule ElixbusWeb.ElixbusLive do
     {:noreply, socket}
   end
 
+  # sets the bus counts to 3, handles socket value and sends message to the dispatch for it to change the bus count
   def handle_event("3bus", _value, socket) do
     socket =
       socket
@@ -168,6 +180,7 @@ defmodule ElixbusWeb.ElixbusLive do
     {:noreply, socket}
   end
 
+  # sets the bus counts to 4, handles socket value and sends message to the dispatch for it to change the bus count
   def handle_event("4bus", _value, socket) do
     socket =
       socket
@@ -178,6 +191,7 @@ defmodule ElixbusWeb.ElixbusLive do
     {:noreply, socket}
   end
 
+  # sets the bus counts to 5, handles socket value and sends message to the dispatch for it to change the bus count
   def handle_event("5bus", _value, socket) do
     socket =
       socket
@@ -188,7 +202,7 @@ defmodule ElixbusWeb.ElixbusLive do
     {:noreply, socket}
   end
 
-
+  # Refreshes the current bus positions in the socket
   def handle_event("reloaddata", _value, socket) do
     send(:livereceiver, {:refresh, self()})
     receive do
@@ -212,11 +226,12 @@ defmodule ElixbusWeb.ElixbusLive do
     end
   end
 
-
+  # Launches the receive_live function
   def init_receive(socket, n) do
     receive_live(socket, (for n <- 0..(n-1), do: 0))
   end
 
+  # Waits for a message, either to update its current values, or to send them to another process
   def receive_live(socket, currentValues) do
     IO.inspect(currentValues)
     receive do

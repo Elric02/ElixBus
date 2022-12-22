@@ -1,17 +1,9 @@
 defmodule Bus do
 
   # initialize the route of the bus and its id call bus_deployed
-  # process needs id (integer) and a String containing the name of the route in the json file
-  def bus(id, route) do
-    routelistmap = get_route(route)
+  # process needs id (integer) and a String containing the list of maps of the stops
+  def bus(id, routelistmap) do
     bus_deployed(id, routelistmap, 0, :stop, 0)
-  end
-
-  # takes a string, returns a list of maps of the stops
-  def get_route(route) do
-    routes_Str = File.read!("priv/static/assets/routes.json")
-    routes_JS = Jason.decode!(routes_Str)
-    routes_JS[route]["stops"]
   end
 
   # main function, it needs id (integer), route (list of maps), actual pos (index of the list of maps), and state (atom either :enroute or :stop)
@@ -46,18 +38,18 @@ defmodule Bus do
           {0,t}
         else
           # calculate time left to travel to the next stop
-          to_travel = time_period - Time.diff(time_start,Time.utc_now())
+          to_travel = time_period - Time.diff(Time.utc_now(), time_start)
           {t,to_travel}
         end
         Process.sleep(wait_now*1000)
         # calculate the time it took to change state
-        t = Time.diff(time_start, Time.utc_now())
+        t = Time.diff(Time.utc_now(), time_start)
         IO.puts("Bus no #{id} was at state #{state} at position #{pos} for #{t} seconds : #{posToString(route,pos)} moving on")
         bus_deployed(id, route, next_pos, next_state, wait_next)
     # waits for the time needed to "move" or to be stopped for orders
     after
-      time_period ->
-        IO.puts("Bus no #{id} was at state #{state} at position #{pos} for #{time_period/1000} seconds : #{posToString(route,pos)} moving on")
+      time_period*1000 ->
+        IO.puts("Bus no #{id} was at state #{state} at position #{pos} for #{time_period} seconds : #{posToString(route,pos)} moving on")
     end
     bus_deployed(id, route, next_pos, next_state, wait)
   end
@@ -77,7 +69,7 @@ defmodule Bus do
     {new_pos, new_state}
   end
 
-  # given a route, a position and a state, it returns how long (ms) till next state
+  # given a route, a position and a state, it returns how long (s) till next state
   def goal_time(route, pos, state) do
     stopmap = Enum.at(route,pos)
     {json_time, json_var_time} = if state == :stop do
@@ -85,7 +77,7 @@ defmodule Bus do
     else
       {stopmap["trip"],stopmap["tripVar"]}
     end
-    1000*(json_time + Enum.random(0..json_var_time))
+    json_time + Enum.random(0..json_var_time)
   end
 
   # returns the name of the stop it is at
