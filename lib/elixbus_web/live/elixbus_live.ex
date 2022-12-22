@@ -75,7 +75,7 @@ defmodule ElixbusWeb.ElixbusLive do
 
     <!-- SHOW BUS ROUTE FEATURE -->
 
-    <div id="showbus"></div>
+    <div id="showbus">Loading...</div>
     <h1 id ="currentpos" hidden>Current positions : <%= @bus_pos0 %> <%= @bus_pos1 %> <%= @bus_pos2 %> <%= @bus_pos3 %> <%= @bus_pos4 %></h1>
     <script>
       loadData = function() {
@@ -94,7 +94,6 @@ defmodule ElixbusWeb.ElixbusLive do
           for (var j = 0; j < 5; j++) {
             contentToAdd += "</tr><tr>";
             currentPosition = document.getElementById("currentpos").innerHTML.split(' ')[j+3];
-            console.log(currentPosition);
             for (var k = 0; k < stops.length; k++) {
               if (currentPosition == k) {
                 contentToAdd += "<td>" + j + "</td>";
@@ -110,9 +109,8 @@ defmodule ElixbusWeb.ElixbusLive do
       currentpos_buffer = 0;
       appendToHtml = function(contentToAdd) {
         currentpos = document.getElementById("currentpos").innerHTML;
-        console.log(document.getElementById("currentpos").innerHTML);
         if (currentpos != currentpos_buffer) {
-          document.getElementById("showbus").innerHTML += contentToAdd;
+          document.getElementById("showbus").innerHTML = contentToAdd;
           currentpos_buffer = currentpos;
         }
       }

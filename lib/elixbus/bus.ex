@@ -1,17 +1,9 @@
 defmodule Bus do
 
   # initialize the route of the bus and its id call bus_deployed
-  # process needs id (integer) and a String containing the name of the route in the json file
-  def bus(id, route) do
-    routelistmap = get_route(route)
+  # process needs id (integer) and a String containing the list of maps of the stops
+  def bus(id, routelistmap) do
     bus_deployed(id, routelistmap, 0, :stop, 0)
-  end
-
-  # takes a string, returns a list of maps of the stops
-  def get_route(route) do
-    routes_Str = File.read!("priv/static/assets/routes.json")
-    routes_JS = Jason.decode!(routes_Str)
-    routes_JS[route]["stops"]
   end
 
   # main function, it needs id (integer), route (list of maps), actual pos (index of the list of maps), and state (atom either :enroute or :stop)
