@@ -1,5 +1,16 @@
 defmodule Bus do
 
+  def docker_bus(id) do
+    IO.puts("Bus process started : #{String.to_atom("#{id}")}")
+    Process.register(self(), String.to_atom("#{id}"))
+    IO.inspect(Process.whereis(String.to_atom("#{id}")))
+    receive do
+      {routelistmap} ->
+        IO.puts("#{id} received the message from dispatch, will now commence its route")
+        bus(id, routelistmap)
+    end
+  end
+
   # initialize the route of the bus and its id call bus_deployed
   # process needs id (integer) and a String containing the list of maps of the stops
   def bus(id, routelistmap) do
@@ -14,7 +25,7 @@ defmodule Bus do
     # record time
     time_start = Time.utc_now()
     # send position to dispatch
-    send(:dispatch, {:position, id, pos})
+    send({:dispatch, :dispatch@main}, {:position, id, pos})
     # calculate next position and state
     {next_pos, next_state} = next(route, pos, state)
     # calculate the time to wait right now and the next wait time
@@ -30,7 +41,7 @@ defmodule Bus do
       :remove ->
         IO.puts("Removed bus #{id}")
         Process.unregister(String.to_atom("#{id}"))
-        Process.exit(self(), "ended bus")
+        docker_bus(id)
       # receive wait a time, if stopped wait the time, else finish "moving" and set wait to the time received
       {:wait, t} ->
         IO.puts("Dispatch asked to wait for #{t} seconds when it is stopped")

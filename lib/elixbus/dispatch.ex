@@ -1,7 +1,13 @@
 defmodule Dispatch do
 
+  # Initializes dispatch
+  def init(nb, route) do
+    Process.register(spawn(__MODULE__, :deploy, [nb, route]), :dispatch)
+  end
+
   # To call for first execution
   def deploy(nb, route) do
+    IO.puts("Main process running on #{Node.self()}")
     routelistmap = get_route(route)
     createBus(0, nb, route, routelistmap)
     totallength = computeTime(routelistmap, 0, length(routelistmap))
@@ -13,21 +19,24 @@ defmodule Dispatch do
   def createBus(currentId, nbMax, route, routelistmap) do
     if currentId < nbMax do
       IO.puts("Creating new bus (id #{currentId}) on route #{route}")
-      Process.register(spawn(Bus, :bus, [currentId, routelistmap]), String.to_atom("#{currentId}"))
+      f = String.to_atom("#{currentId}")
+      t = String.to_atom("bus#{currentId}@elixir#{currentId+2}")
+      IO.puts("Attempting to send message to #{f} of #{t}")
+      send({String.to_atom("#{currentId}"), String.to_atom("bus#{currentId}@elixir#{currentId+2}")}, {routelistmap})
       createBus(currentId + 1, nbMax, route, routelistmap)
     end
   end
 
   # Removes specified bus
   def removeBus(id) do
-    send(String.to_atom("#{id}"), :remove)
+    send({String.to_atom("#{id}"), String.to_atom("bus#{id}@elixir#{id+2}")}, :remove)
   end
 
   # Receives all messages here
   def manageBus(nb, route, routelistmap, totallength, currentPos) do
     receive do
       {:position, id, pos} ->
-        ElixbusWeb.ElixbusLive.update_table(id, pos)
+        IO.inspect(currentPos)
         # Which one is the previous bus in the order of the list
         if id == 0 do
           previousbus = nb - 1
@@ -37,21 +46,16 @@ defmodule Dispatch do
           if timeDiff < (totallength / nb)-50 and timeDiff != 0 do
             timeToWait = ceil(((totallength / nb)-30) - timeDiff)
             IO.puts("Bus no #{id} is too early (threshold : #{(totallength / nb)-50} seconds). Sending command to wait #{timeToWait} seconds")
-            if Process.whereis(:livereceiver) != nil do
-              send(String.to_atom("#{id}"), {:wait, timeToWait})
-            end
+            send({String.to_atom("#{id}"), String.to_atom("bus#{id}@elixir#{id+2}")}, {:wait, timeToWait})
           end
         else
           previousbus = id - 1
           # Check if the bus is early compared to the previous one in the list
           timeDiff = computeTime(routelistmap, pos, Enum.at(currentPos, previousbus))
-          IO.puts("#{timeDiff} #{(totallength / nb)-50}")
           if timeDiff < (totallength / nb)-50 do
             timeToWait = ceil(((totallength / nb)-30) - timeDiff)
             IO.puts("Bus no #{id} is too early (threshold : #{(totallength / nb)-50} seconds). Sending command to wait #{timeToWait} seconds")
-            if Process.whereis(:livereceiver) != nil do
-              send(String.to_atom("#{id}"), {:wait, timeToWait})
-            end
+            send({String.to_atom("#{id}"), String.to_atom("bus#{id}@elixir#{id+2}")}, {:wait, timeToWait})
           end
         end
         manageBus(nb, route, routelistmap, totallength, List.replace_at(currentPos, id, pos))
