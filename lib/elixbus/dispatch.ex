@@ -43,18 +43,18 @@ defmodule Dispatch do
           # Check if the bus is early compared to the previous one in the list
           timeDiff = computeTime(routelistmap, pos, Enum.at(currentPos, previousbus))
           # Special condition : don't wait if it is bus 0 and previous one is at the same stop
-          if timeDiff < (totallength / nb)-50 and timeDiff != 0 do
-            timeToWait = ceil(((totallength / nb)-30) - timeDiff)
-            IO.puts("Bus no #{id} is too early (threshold : #{(totallength / nb)-50} seconds). Sending command to wait #{timeToWait} seconds")
+          if timeDiff < (totallength / nb)*0.9 and timeDiff != 0 do
+            timeToWait = ceil((((totallength / nb)*0.9)-10) - timeDiff)
+            IO.puts("Bus no #{id} is too early (threshold : #{(totallength / nb)*0.9} seconds). Sending command to wait #{timeToWait} seconds")
             send({String.to_atom("#{id}"), String.to_atom("bus#{id}@elixir#{id+2}")}, {:wait, timeToWait})
           end
         else
           previousbus = id - 1
           # Check if the bus is early compared to the previous one in the list
           timeDiff = computeTime(routelistmap, pos, Enum.at(currentPos, previousbus))
-          if timeDiff < (totallength / nb)-50 do
-            timeToWait = ceil(((totallength / nb)-30) - timeDiff)
-            IO.puts("Bus no #{id} is too early (threshold : #{(totallength / nb)-50} seconds). Sending command to wait #{timeToWait} seconds")
+          if timeDiff < (totallength / nb)*0.9 do
+            timeToWait = ceil((((totallength / nb)*0.9)-10) - timeDiff)
+            IO.puts("Bus no #{id} is too early (threshold : #{(totallength / nb)*0.9} seconds). Sending command to wait #{timeToWait} seconds")
             send({String.to_atom("#{id}"), String.to_atom("bus#{id}@elixir#{id+2}")}, {:wait, timeToWait})
           end
         end
