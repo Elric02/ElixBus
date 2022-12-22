@@ -29,6 +29,7 @@ defmodule Bus do
       # receive remove and exit the process
       :remove ->
         IO.puts("Removed bus #{id}")
+        send(:dispatch, {:position, id, 0})
         Process.unregister(String.to_atom("#{id}"))
         Process.exit(self(), "ended bus")
       # receive wait a time, if stopped wait the time, else finish "moving" and set wait to the time received
