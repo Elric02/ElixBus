@@ -228,12 +228,11 @@ defmodule ElixbusWeb.ElixbusLive do
 
   # Launches the receive_live function
   def init_receive(socket, n) do
-    receive_live(socket, (for n <- 0..(n-1), do: 0))
+    receive_live(socket, (for _ <- 0..(n-1), do: 0))
   end
 
   # Waits for a message, either to update its current values, or to send them to another process
   def receive_live(socket, currentValues) do
-    IO.inspect(currentValues)
     receive do
       {:update, id, pos} ->
         receive_live(socket, List.replace_at(currentValues, id, pos))
