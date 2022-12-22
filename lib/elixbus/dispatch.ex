@@ -12,7 +12,6 @@ defmodule Dispatch do
   # Creates enough bus processes
   def createBus(currentId, nbMax, route, routelistmap) do
     if currentId < nbMax do
-      # (fonction bus à importer de bus.ex)
       IO.puts("Creating new bus (id #{currentId}) on route #{route}")
       Process.register(spawn(Bus, :bus, [currentId, routelistmap]), String.to_atom("#{currentId}"))
       createBus(currentId + 1, nbMax, route, routelistmap)
@@ -39,7 +38,9 @@ defmodule Dispatch do
           if timeDiff < (totallength / nb)-50 and timeDiff != 0 do
             timeToWait = ceil(((totallength / nb)-30) - timeDiff)
             IO.puts("Bus no #{id} is too early. Sending command to wait #{timeToWait} seconds")
-            send(String.to_atom("#{id}"), {:wait, timeToWait})
+            if Process.whereis(:livereceiver) != nil do
+              send(String.to_atom("#{id}"), {:wait, timeToWait})
+            end
           end
         else
           previousbus = id - 1
@@ -49,7 +50,9 @@ defmodule Dispatch do
           if timeDiff < (totallength / nb)-50 do
             timeToWait = ceil(((totallength / nb)-30) - timeDiff)
             IO.puts("Bus no #{id} is too early. Sending command to wait #{timeToWait} seconds")
-            send(String.to_atom("#{id}"), {:wait, timeToWait})
+            if Process.whereis(:livereceiver) != nil do
+              send(String.to_atom("#{id}"), {:wait, timeToWait})
+            end
           end
         end
         manageBus(nb, route, routelistmap, totallength, List.replace_at(currentPos, id, pos))
