@@ -34,9 +34,13 @@ defmodule ElixbusWeb.ElixbusLive do
       color: white;
     }
 
+    table {
+      table-layout: fixed;
+    }
+
     th {
       writing-mode: vertical-lr;
-      text-align: right;
+      text-align: center;
       padding: 2px;
       font-size: 20px;
     }

@@ -34,7 +34,7 @@ defmodule Dispatch do
           # Check if the bus is early compared to the previous one in the list
           timeDiff = computeTime(routelistmap, pos, Enum.at(currentPos, previousbus))
           # Special condition : don't wait if it is bus 0 and previous one is at the same stop
-          if timeDiff < (totallength / nb)*0.8 do
+          if timeDiff < (totallength / nb)*0.8 and timeDiff != 0 do
             timeToWait = abs(ceil(((totallength / nb)*0.7) - timeDiff))
             IO.puts("Bus no #{id} is too early (threshold : #{(totallength / nb)*0.8} seconds). Sending command to wait #{timeToWait} seconds")
             if Process.whereis(String.to_atom("#{id}")) != nil do
